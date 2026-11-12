@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ibhatt089/markdown-to-html",
+  "title": "Markdown to HTML MCP Server",
+  "description": "Convert Markdown to HTML.",
+  "repository": {
+    "url": "https://github.com/ibhatt089/mcp-awesome-local-copilot",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "nuget",
+      "registryBaseUrl": "https://api.nuget.org",
+      "identifier": "Ibhatt089.McpSamples.MarkdownToHtml",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

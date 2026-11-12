@@ -1,40 +1,28 @@
-# AGENTS.md - MCP .NET Samples
+# AGENTS.md - MCP Awesome Local Copilot
 
 ## Project Overview
 
-The Model Context Protocol (MCP) .NET Samples repository demonstrates how to build MCP servers using .NET 9.0. This repository contains four comprehensive sample implementations that showcase different aspects of MCP server development, from GitHub integration to web services, data management, and email communications.
+Four .NET 10 MCP servers, packaged as .NET tools on nuget.org and run locally over stdio with `dnx`. The repository is also a Cursor plugin, a Claude Code plugin and marketplace, and a VS Code MCP workspace. Docker and Azure deployment are intentionally not supported.
 
 ## Project Structure and Architecture
 
 ### Repository Organization
 
 ```
-mcp-dotnet-samples/
-├── .github/                    # GitHub configuration and workflows
-│   ├── workflows/             # CI/CD pipeline definitions
-│   ├── copilot-instructions.md # GitHub Copilot coding standards
-│   └── templates/             # Issue and PR templates
-├── shared/                    # Common shared libraries
-│   └── McpSamples.Shared/     # Shared MCP implementation utilities
-├── awesome-copilot/           # GitHub Copilot integration sample
-│   ├── src/McpSamples.AwesomeCopilot.HybridApp/
-│   ├── infra/                 # Azure Bicep templates
-│   └── .vscode/              # VS Code MCP configuration
-├── markdown-to-html/          # Markdown conversion sample
-│   ├── src/McpSamples.MarkdownToHtml.HybridApp/
-│   ├── infra/                 # Azure Bicep templates
-│   └── .vscode/              # VS Code MCP configuration
-├── outlook-email/             # Email communication sample
-│   ├── src/McpSamples.OutlookEmail.HybridApp/
-│   ├── infra/                 # Azure Bicep templates
-│   └── .vscode/              # VS Code MCP configuration
-├── todo-list/                 # Todo management sample
-│   ├── src/McpSamples.TodoList.HybridApp/
-│   ├── infra/                 # Azure Bicep templates
-│   └── .vscode/              # VS Code MCP configuration
-├── Dockerfile.*              # Multi-stage Docker configurations
-├── Directory.Build.props     # Global MSBuild properties
-└── global.json              # .NET SDK configuration
+mcp-awesome-local-copilot/
+├── .cursor-plugin/plugin.json   # Cursor plugin manifest
+├── .claude-plugin/              # Claude Code plugin + marketplace manifests
+├── .mcp.json                    # MCP servers (dnx) for the Cursor and Claude Code plugins
+├── .vscode/mcp.json             # MCP servers (dnx) for VS Code
+├── .github/workflows/           # ci.yaml (pack + dnx smoke test), publish.yaml (NuGet on v* tags)
+├── scripts/smoke_test.py        # stdio handshake test for all packed servers
+├── shared/McpSamples.Shared/    # Shared MCP host code
+├── awesome-copilot/ | markdown-to-html/ | outlook-email/ | todo-list/
+│   ├── src/McpSamples.<Name>.HybridApp/
+│   │   └── .mcp/server.json     # MCP registry metadata packed into the NuGet package
+│   └── .vscode/                 # mcp.stdio.local.json / mcp.http.local.json for running from source
+├── Directory.Build.props        # Shared MSBuild + NuGet package properties
+└── global.json                  # .NET SDK configuration
 ```
 
 ### Sample Components
@@ -52,18 +40,14 @@ mcp-dotnet-samples/
 - **Key Features**:
   - Markdown parsing and HTML generation
   - Configurable HTML output options
-  - Azure integration for scalable processing
 - **Technologies**: Markdown processing, HTML generation, web services
 
 #### 3. Outlook Email Sample
-- **Purpose**: Sends emails through Outlook with comprehensive authentication scenarios
+- **Purpose**: Sends emails through Outlook
 - **Key Features**:
   - Email sending capabilities via Microsoft Graph API
-  - OAuth authentication with Azure API Management
-  - API key authentication with Azure Functions
-  - No-authentication local development mode
-  - Azure Functions and Container Apps deployment support
-- **Technologies**: Microsoft Graph, OAuth, Azure Functions, API Management
+  - Entra ID client-secret credentials from `EntraId__*` environment variables
+- **Technologies**: Microsoft Graph, Azure.Identity
 
 #### 4. Todo List Sample
 - **Purpose**: Manages todo items with full CRUD operations
@@ -78,7 +62,7 @@ mcp-dotnet-samples/
 ### C# and .NET Standards
 
 #### Language and Framework
-- **Target Framework**: .NET 9.0 (as specified in Directory.Build.props)
+- **Target Framework**: .NET 10.0 (as specified in Directory.Build.props)
 - **Language Version**: Latest C# features enabled
 - **Nullable Reference Types**: Enabled for all projects
 - **Implicit Global Usings**: Enabled to reduce boilerplate
@@ -155,19 +139,11 @@ public string GetPrompt([Description("Context parameter")] string context)
 }
 ```
 
-### Azure and Infrastructure Standards
+### Packaging Standards
 
-#### Bicep Template Organization
-- Use consistent parameter naming and descriptions
-- Implement proper resource tagging
-- Follow Azure naming conventions with abbreviations file
-- Include monitoring and security configurations
-
-#### Container Configuration
-- Multi-stage Docker builds for optimization
-- Proper health check implementations
-- Environment variable configuration
-- Security scanning and minimal base images
+- Every server is a .NET tool with `PackageType` `McpServer` and a `.mcp/server.json`
+- In stdio mode nothing but MCP JSON-RPC may be written to stdout; logs go to stderr
+- Keep `.mcp.json`, `.vscode/mcp.json` and each README install snippet in sync with package IDs
 
 ## Testing Protocols and Guidelines
 
@@ -210,7 +186,7 @@ public class ExampleMcpServerTests
 - Test MCP server initialization and registration
 - Verify tool and prompt functionality end-to-end
 - Test error handling and edge cases
-- Validate Azure deployment configurations
+- Run `scripts/smoke_test.py` against packed packages to verify the `dnx` stdio handshake
 
 ### Running Tests
 ```bash
@@ -235,8 +211,8 @@ dotnet test ./tests/McpSamples.{Sample}.Tests/
 - [ ] **Code Quality**: Follows established coding standards
 - [ ] **Tests**: Includes appropriate unit and integration tests
 - [ ] **Documentation**: Updates relevant documentation
-- [ ] **Build**: Successfully builds with .NET 9.0
-- [ ] **Azure**: Infrastructure changes are validated
+- [ ] **Build**: Successfully builds with .NET 10
+- [ ] **Smoke test**: `python scripts/smoke_test.py ./artifacts` passes
 - [ ] **Security**: No hardcoded secrets or vulnerabilities
 - [ ] **Performance**: No significant performance regressions
 - [ ] **MCP Compliance**: Follows MCP protocol specifications
@@ -255,7 +231,6 @@ Brief description of the changes made.
 - Unit tests: [Pass/Fail]
 - Integration tests: [Pass/Fail]
 - Manual testing: [Description]
-- Azure deployment: [Validated/Not applicable]
 
 ## Breaking Changes
 List any breaking changes or migration requirements.
@@ -282,11 +257,8 @@ test(markdown): add unit tests for HTML conversion
 ## Development Environment Setup
 
 ### Prerequisites
-- .NET 9.0 SDK
-- Visual Studio Code with C# Dev Kit extension
-- Docker Desktop for containerization
-- Azure CLI for Azure operations
-- Azure Developer CLI (azd) for deployment
+- .NET 10 SDK (provides `dnx`)
+- Python 3 (smoke test only)
 
 ### Local Development Workflow
 1. **Clone Repository**: `git clone <repository-url>`
@@ -296,35 +268,14 @@ test(markdown): add unit tests for HTML conversion
 5. **Configure MCP**: Copy appropriate `.vscode/mcp.json` configuration
 6. **Start Development**: Use VS Code with MCP integration
 
-### VS Code Configuration
-Each sample includes pre-configured VS Code settings for MCP integration:
-- `.vscode/mcp.stdio.local.json` - Local STDIO communication
-- `.vscode/mcp.http.local.json` - Local HTTP communication
-- `.vscode/mcp.stdio.container.json` - Container-based STDIO
+### Editor Configuration
+- `.vscode/mcp.json` (repo root) - all four servers via `dnx`
+- `<sample>/.vscode/mcp.stdio.local.json` - run one server from source over stdio
+- `<sample>/.vscode/mcp.http.local.json` - run one server from source over streamable HTTP
 
-The outlook-email sample includes additional configurations for:
-- `.vscode/mcp.http.local-func.json` - Local Azure Functions
-- `.vscode/mcp.http.remote-func.json` - Remote Azure Functions
-- `.vscode/mcp.http.remote-apim.json` - Azure API Management integration
+## Release
 
-## Deployment and Operations
-
-### Azure Deployment
-- Use `azd up` for automated deployment
-- Configure environment variables appropriately
-- Monitor applications using Application Insights
-- Implement proper logging and error handling
-
-### Container Operations
-- Build containers using provided Dockerfiles
-- Tag images appropriately for Azure Container Registry
-- Configure health checks and resource limits
-- Implement graceful shutdown handling
-
-### Monitoring and Observability
-- Use structured logging with ILogger
-- Implement Application Insights telemetry
-- Monitor MCP server performance and usage
-- Set up alerts for critical failures
+- Add the `NUGET_API_KEY` repository secret
+- Bump plugin manifest versions, then push a `v*` tag; `publish.yaml` packs, smoke-tests and pushes to nuget.org
 
 This document serves as the primary reference for development practices and standards within the MCP .NET Samples repository. All contributors should familiarize themselves with these guidelines to ensure consistency and quality across the codebase.

@@ -1,0 +1,20 @@
+{
+  "name": "mcp-awesome-local-copilot",
+  "version": "1.0.0",
+  "description": "Four .NET MCP servers (awesome-copilot, markdown-to-html, outlook-email, todo-list) that run locally with dnx. No Docker required.",
+  "author": {
+    "name": "Ishan Bhatt"
+  },
+  "repository": "https://github.com/ibhatt089/mcp-awesome-local-copilot",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "dotnet",
+    "dnx",
+    "copilot",
+    "markdown",
+    "outlook",
+    "todo"
+  ],
+  "mcpServers": "./.mcp.json"
+}

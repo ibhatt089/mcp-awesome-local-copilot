@@ -13,19 +13,30 @@
     <UserSecretsId>2e1c39d8-6dfa-4f21-bfea-13b1f8459542</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
+    <PackageType>McpServer</PackageType>
+    <PackageId>Ibhatt089.McpSamples.OutlookEmail</PackageId>
+    <ToolCommandName>mcp-outlook-email</ToolCommandName>
+    <Description>MCP server that sends Outlook email through Microsoft Graph.</Description>
+    <PackageTags>mcp;mcp-server;dotnet-tool</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include=".mcp/server.json" Pack="true" PackagePath="/.mcp/" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.*" />
     <PackageReference Include="Microsoft.Graph" Version="5.*" />
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.*" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\shared\McpSamples.Shared\McpSamples.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include=".azurefunctions\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

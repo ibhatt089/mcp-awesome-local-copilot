@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ibhatt089/todo-list",
+  "title": "Todo List MCP Server",
+  "description": "Manage an in-memory todo list.",
+  "repository": {
+    "url": "https://github.com/ibhatt089/mcp-awesome-local-copilot",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "nuget",
+      "registryBaseUrl": "https://api.nuget.org",
+      "identifier": "Ibhatt089.McpSamples.TodoList",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

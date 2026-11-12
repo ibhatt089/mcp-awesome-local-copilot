@@ -1,4 +1,4 @@
-# Copilot Instructions (Concise) – MCP .NET Samples
+# Copilot Instructions (Concise) – MCP Awesome Local Copilot
 
 Purpose: Make agents instantly productive. Follow ONLY patterns proven in this repo; don’t invent abstractions.
 
@@ -12,14 +12,14 @@ Purpose: Make agents instantly productive. Follow ONLY patterns proven in this r
 - awesome-copilot: Large `metadata.json`; reuse `IMetadataService` (don’t repeatedly load whole file). Tools: search & load instructions.
 - markdown-to-html: Extra switches `-tc`, `-p`, `--tags` only parsed AFTER `--` delimiter.
 - todo-list: In‑memory SQLite kept alive by one singleton `SqliteConnection`; use EF Core set-based ops (`ExecuteUpdateAsync/ExecuteDeleteAsync`).
-- outlook-email: Supports auth parameters (`--tenant-id/-t`, `--client-id/-c`, `--client-secret/-s`) or user secrets; can also host via Azure Functions (see sample README). Only add auth handling inside this sample—do not leak to shared.
+- outlook-email: Supports auth parameters (`--tenant-id/-t`, `--client-id/-c`, `--client-secret/-s`) or `EntraId__TenantId` / `EntraId__ClientId` / `EntraId__ClientSecret` env vars (preferred for plugins). Only add auth handling inside this sample—do not leak to shared.
 
 ## Core Conventions
-- Target: .NET 9; nullable + implicit usings enabled globally.
+- Target: .NET 10; nullable + implicit usings enabled globally.
 - Entry project path pattern: `./<sample>/src/<PascalName>.HybridApp/`.
 - Always preserve argument delimiter: `dotnet run … -- --http <other-switches>`.
 - JSON camelCase & case-insensitive (match existing config); prefer `System.Text.Json`.
-- Keep Dockerfiles minimal; expose port 8080 internally; local HTTP dev ports: ac=5250, todo=5240, html=5280, outlook=5260.
+- No Docker or Azure deployment. Distribution is NuGet + `dnx`. In stdio mode only JSON-RPC may go to stdout. Local HTTP dev ports: ac=5250, todo=5240, html=5280, outlook=5260.
 
 ## Adding / Modifying Tools
 - Create public class or method with `[McpServerTool]` (and `[Description]` for method + parameters). Return lightweight DTO / primitives; let host format.
@@ -40,17 +40,17 @@ Purpose: Make agents instantly productive. Follow ONLY patterns proven in this r
 ## Minimal Workflows
 - Run STDIO: `dotnet run --project ./markdown-to-html/src/McpSamples.MarkdownToHtml.HybridApp`
 - Run HTTP: append `-- --http` (plus sample switches after that).
-- Container: `docker build -f Dockerfile.todo-list -t todo-list:latest .` then `docker run -i --rm -p 8080:8080 todo-list:latest [--http]`.
-- Deploy (per sample): `azd auth login` then `azd up` inside sample folder, then read FQDN via `azd env get-value AZURE_RESOURCE_<...>_FQDN`.
+- Pack: `dotnet pack ./todo-list/src/McpSamples.TodoList.HybridApp -c Release -o ./artifacts`.
+- Run packed: `dnx Ibhatt089.McpSamples.TodoList --yes --add-source ./artifacts`; verify all with `python scripts/smoke_test.py ./artifacts`.
 
 ## Adding a New Sample (Checklist)
 1. Copy structure from an existing sample; reference `McpSamples.Shared`.
 2. Implement `Program.cs` with same pattern (parse settings -> add services -> `BuildApp`).
-3. Add `Dockerfile.<name>` + `.vscode/mcp.*.json` variants; expose 8080.
-4. Update root README table with install badges.
+3. Add NuGet tool properties to the csproj, a `.mcp/server.json`, and `.vscode/mcp.*.local.json`.
+4. Register it in `.mcp.json`, `.vscode/mcp.json`, `scripts/smoke_test.py`, and the root README table.
 
 ## PR Expectations (Essentials)
-- Build passes (.NET 9). Tools/prompts discoverable. No hardcoded secrets. Sample-specific behavior isolated. Conventional commits.
+- Build passes (.NET 10). Tools/prompts discoverable. No hardcoded secrets. Sample-specific behavior isolated. Conventional commits.
 
 Questions / unclear? Compare with the most similar existing sample before inventing new structure.
 

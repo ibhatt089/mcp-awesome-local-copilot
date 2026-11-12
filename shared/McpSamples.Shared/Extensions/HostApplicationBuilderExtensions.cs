@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace McpSamples.Shared.Extensions;
 
@@ -39,6 +40,9 @@ public static class HostApplicationBuilderExtensions
 
             return webApp;
         }
+
+        // stdout carries the MCP protocol in stdio mode, so console logs must go to stderr.
+        builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);
 
         builder.Services.AddMcpServer()
                         .WithStdioServerTransport()

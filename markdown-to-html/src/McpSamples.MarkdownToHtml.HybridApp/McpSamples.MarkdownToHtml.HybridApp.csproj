@@ -13,6 +13,22 @@
     <UserSecretsId>a83833d7-84f2-4942-9620-8c162e8ef2ee</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
+    <PackageType>McpServer</PackageType>
+    <PackageId>Ibhatt089.McpSamples.MarkdownToHtml</PackageId>
+    <ToolCommandName>mcp-markdown-to-html</ToolCommandName>
+    <Description>MCP server that converts Markdown to HTML.</Description>
+    <PackageTags>mcp;mcp-server;dotnet-tool</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include=".mcp/server.json" Pack="true" PackagePath="/.mcp/" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Markdig" Version="1.*" />
   </ItemGroup>

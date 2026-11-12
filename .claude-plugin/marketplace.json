@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "mcp-awesome-local-copilot",
+  "owner": {
+    "name": "Ishan Bhatt"
+  },
+  "plugins": [
+    {
+      "name": "mcp-awesome-local-copilot",
+      "description": "Four .NET MCP servers (awesome-copilot, markdown-to-html, outlook-email, todo-list) that run locally with dnx. No Docker required.",
+      "source": "./",
+      "version": "1.0.0",
+      "author": {
+        "name": "Ishan Bhatt"
+      },
+      "homepage": "https://github.com/ibhatt089/mcp-awesome-local-copilot"
+    }
+  ]
+}

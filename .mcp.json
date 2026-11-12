@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "awesome-copilot": {
+      "type": "stdio",
+      "command": "dnx",
+      "args": [
+        "Ibhatt089.McpSamples.AwesomeCopilot",
+        "--yes"
+      ]
+    },
+    "markdown-to-html": {
+      "type": "stdio",
+      "command": "dnx",
+      "args": [
+        "Ibhatt089.McpSamples.MarkdownToHtml",
+        "--yes"
+      ]
+    },
+    "outlook-email": {
+      "type": "stdio",
+      "command": "dnx",
+      "args": [
+        "Ibhatt089.McpSamples.OutlookEmail",
+        "--yes"
+      ]
+    },
+    "todo-list": {
+      "type": "stdio",
+      "command": "dnx",
+      "args": [
+        "Ibhatt089.McpSamples.TodoList",
+        "--yes"
+      ]
+    }
+  }
+}

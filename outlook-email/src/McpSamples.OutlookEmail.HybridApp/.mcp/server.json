@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ibhatt089/outlook-email",
+  "title": "Outlook Email MCP Server",
+  "description": "Send Outlook email through Microsoft Graph.",
+  "repository": {
+    "url": "https://github.com/ibhatt089/mcp-awesome-local-copilot",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "nuget",
+      "registryBaseUrl": "https://api.nuget.org",
+      "identifier": "Ibhatt089.McpSamples.OutlookEmail",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "EntraId__TenantId",
+          "description": "Entra ID tenant ID",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "EntraId__ClientId",
+          "description": "Entra ID application (client) ID",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "EntraId__ClientSecret",
+          "description": "Entra ID client secret",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

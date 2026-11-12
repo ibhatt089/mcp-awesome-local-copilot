@@ -1,0 +1,55 @@
+name: Publish to NuGet
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          python - "$VERSION" <<'EOF'
+          import glob, json, sys
+          version = sys.argv[1]
+          for path in glob.glob("*/src/*/.mcp/server.json"):
+              doc = json.load(open(path))
+              doc["version"] = version
+              for package in doc["packages"]:
+                  package["version"] = version
+              open(path, "w").write(json.dumps(doc, indent=2) + "\n")
+          EOF
+
+      - name: Pack
+        run: |
+          for p in */src/*/*.HybridApp.csproj; do
+            dotnet pack "$p" -c Release -o ./artifacts -p:Version="$VERSION"
+          done
+
+      - name: Smoke test through dnx
+        run: python scripts/smoke_test.py ./artifacts
+
+      - name: Push to nuget.org
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" ./artifacts/*.nupkg --generate-notes

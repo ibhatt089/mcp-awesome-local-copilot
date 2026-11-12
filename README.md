@@ -1,64 +1,103 @@
-# Model Context Protocol .NET Samples
+# MCP Awesome Local Copilot
 
-[![Microsoft Foundry Community Discord](https://dcbadge.limes.pink/api/server/ByRwuEEgH4)](https://discord.com/invite/ByRwuEEgH4)
-[![Microsoft Foundry Developer Forum](https://img.shields.io/badge/GitHub-Microsoft_Foundry_Developer_Forum-blue?style=for-the-badge&logo=github&color=000000&logoColor=fff)](https://aka.ms/foundry/forum)
+Four .NET [Model Context Protocol](https://modelcontextprotocol.io/) servers packaged as a plugin for **Cursor**, **Claude Code**, and **VS Code / GitHub Copilot**. Every server runs locally over stdio through `dnx`. **No Docker, no containers, no Azure.**
 
-## 🚀 Introduction
+Based on [microsoft/mcp-dotnet-samples](https://github.com/microsoft/mcp-dotnet-samples) (MIT). The Docker images, Azure Container Apps, Azure Functions, and API Management deployments were removed. Each server is published to nuget.org as a .NET tool instead.
 
-Welcome to the Model Context Protocol (MCP) .NET Samples repository! This collection of samples demonstrates how to leverage the Model Context Protocol in .NET applications.
+## Servers
 
-MCP is an open protocol that standardizes how applications provide context to Large Language Models (LLMs). Think of MCP like a USB-C port for AI applications - it provides a standardized way to connect AI models to different data sources and tools.
+| Server | NuGet package | What it does |
+|--------|---------------|--------------|
+| [Awesome Copilot](./awesome-copilot/) | `Ibhatt089.McpSamples.AwesomeCopilot` | Searches and loads GitHub Copilot customizations from [awesome-copilot](https://github.com/github/awesome-copilot). |
+| [Markdown to HTML](./markdown-to-html/) | `Ibhatt089.McpSamples.MarkdownToHtml` | Converts Markdown to HTML. |
+| [Outlook Email](./outlook-email/) | `Ibhatt089.McpSamples.OutlookEmail` | Sends email through Microsoft Graph. Needs Entra ID credentials. |
+| [Todo List](./todo-list/) | `Ibhatt089.McpSamples.TodoList` | Manages an in-memory todo list. |
 
-With MCP, you can:
+## Prerequisite: .NET 10 SDK
 
-- Utilize pre-built integrations that your LLM can directly plug into
-- Flexibly switch between LLM providers and vendors
-- Follow best practices for securing your data within your infrastructure
-- Build agents and complex workflows on top of LLMs
+`dnx` ships with the .NET 10 SDK. It downloads each server package from nuget.org on first run and caches it, like `npx` does for npm.
 
-This repository contains .NET samples ranging from building your own MCP implementation to integrating with Azure services.
+If you can't run an installer, install the SDK per-user without admin rights:
 
-## 📋 Sample Projects
+```bash
+# macOS / Linux
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0
+export PATH="$HOME/.dotnet:$PATH"   # add to your shell profile
+```
 
-| Sample Name                             | Install | Description                                                                                                             |
-|-----------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------|
-| [Awesome Copilot](./awesome-copilot/)   | [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/mcp/vscode)<br/>[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/mcp/vscode-insiders)<br/>[![Install in Visual Studio](https://img.shields.io/badge/Visual_Studio-Install-C16FDE?logo=visualstudio&logoColor=white)](https://aka.ms/awesome-copilot/mcp/vs)     | MCP server that retrieves GitHub Copilot customization files from [awesome-copilot](https://github.com/github/awesome-copilot). |
-| [Markdown to HTML](./markdown-to-html/) | [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22markdown-to-html%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Fmarkdown-to-html%3Alatest%22%5D%7D)<br/>[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%7B%22name%22%3A%22markdown-to-html%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Fmarkdown-to-html%3Alatest%22%5D%7D)<br/>[![Install in Visual Studio](https://img.shields.io/badge/Visual_Studio-Install-C16FDE?logo=visualstudio&logoColor=white)](https://aka.ms/vs/mcp-install?%7B%22name%22%3A%22markdown-to-html%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Fmarkdown-to-html%3Alatest%22%5D%7D) | MCP server that converts markdown text to HTML.                                                                                 |
-| [Outlook Email](./outlook-email/)       | [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22outlook-email%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Foutlook-email%3Alatest%22%5D%7D)<br/>[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%7B%22name%22%3A%22outlook-email%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Foutlook-email%3Alatest%22%5D%7D)<br/>[![Install in Visual Studio](https://img.shields.io/badge/Visual_Studio-Install-C16FDE?logo=visualstudio&logoColor=white)](https://aka.ms/vs/mcp-install?%7B%22name%22%3A%22outlook-email%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Foutlook-email%3Alatest%22%5D%7D)             | MCP server that sends emails through Outlook.                                                                                   |
-| [To-do List](./todo-list/)              | [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22todo-list%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Ftodo-list%3Alatest%22%5D%7D)<br/>[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%7B%22name%22%3A%22todo-list%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Ftodo-list%3Alatest%22%5D%7D)<br/>[![Install in Visual Studio](https://img.shields.io/badge/Visual_Studio-Install-C16FDE?logo=visualstudio&logoColor=white)](https://aka.ms/vs/mcp-install?%7B%22name%22%3A%22todo-list%22%2C%22gallery%22%3Afalse%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22ghcr.io%2Fmicrosoft%2Fmcp-dotnet-samples%2Ftodo-list%3Alatest%22%5D%7D)                             | MCP server that manages to-do list items.                                                                                       |
+```powershell
+# Windows
+& ([scriptblock]::Create((irm https://dot.net/v1/dotnet-install.ps1))) -Channel 10.0
+# Adds %LOCALAPPDATA%\Microsoft\dotnet; put it on your user PATH
+```
 
-## 🛠️ Getting Started
+Check with `dnx --help`. If your editor can't find `dnx`, restart it from a shell where `dnx` works, or replace `"command": "dnx"` with its absolute path.
 
-Details on how to set up and run the samples will be provided in each sample's directory.
+Machines behind a NuGet proxy or private feed: `dnx` honors your `NuGet.config`, so mirror the four packages there.
 
-## 📚 Learning Resources
+## Install
 
-- [MCP Official Documentation](https://modelcontextprotocol.io/)
-- [MCP GitHub Repository](https://github.com/modelcontextprotocol/modelcontextprotocol)
+### Cursor
 
-## 🚶‍♀️ Next Steps
+```bash
+git clone https://github.com/ibhatt089/mcp-awesome-local-copilot ~/.cursor/plugins/local/mcp-awesome-local-copilot
+```
 
-- [Learn more about GenAI with .NET with a free course!](https://aka.ms/genainet)
-- [Join the Azure AI Community Discord to keep the conversation going](https://discord.com/invite/ByRwuEEgH4)
+Restart Cursor. The four servers appear under **Settings → MCP**.
 
-## Contributing
+### Claude Code
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+```text
+/plugin marketplace add ibhatt089/mcp-awesome-local-copilot
+/plugin install mcp-awesome-local-copilot@mcp-awesome-local-copilot
+```
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+### VS Code / GitHub Copilot
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+Clone the repo and open it in VS Code. `.vscode/mcp.json` registers all four servers and prompts for the Outlook credentials. To add a single server to your user profile, use the install buttons in that server's README.
 
-## Trademarks
+### Any other MCP client
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+Use `dnx <package> --yes` as the stdio command, for example:
+
+```json
+{
+  "mcpServers": {
+    "todo-list": { "command": "dnx", "args": ["Ibhatt089.McpSamples.TodoList", "--yes"] }
+  }
+}
+```
+
+## Outlook Email credentials
+
+The `outlook-email` server reads `EntraId__TenantId`, `EntraId__ClientId`, and `EntraId__ClientSecret` from its environment. Without them the server starts, but `send_email` fails. If you don't need email, disable that server in your client. See [outlook-email/README.md](./outlook-email/README.md) for setup and security notes.
+
+## Repository layout
+
+```text
+.cursor-plugin/plugin.json      Cursor plugin manifest
+.claude-plugin/plugin.json      Claude Code plugin manifest
+.claude-plugin/marketplace.json Claude Code marketplace (this repo is its own marketplace)
+.mcp.json                       MCP servers shared by the Cursor and Claude Code plugins
+.vscode/mcp.json                MCP servers for VS Code
+shared/                         Shared MCP host code
+<sample>/src/                   Server source; <sample>/src/*/.mcp/server.json is the MCP registry metadata
+.github/workflows/              Build/test and NuGet publish
+```
+
+## Build and test locally
+
+```bash
+for p in */src/*/*.HybridApp.csproj; do dotnet pack "$p" -c Release -o ./artifacts; done
+dnx Ibhatt089.McpSamples.TodoList --yes --add-source ./artifacts
+```
+
+## Publish a release
+
+1. Add a nuget.org API key as the repository secret `NUGET_API_KEY`.
+2. Bump `version` in `.cursor-plugin/plugin.json`, `.claude-plugin/plugin.json`, and `.claude-plugin/marketplace.json`.
+3. Push a tag such as `v1.0.1`. The `publish` workflow stamps that version into each `.mcp/server.json` and package, runs the smoke test, pushes to nuget.org, and attaches the `.nupkg` files to a GitHub release.
+
+## License
+
+MIT. See [LICENSE](./LICENSE). This project is not affiliated with or endorsed by Microsoft.
